@@ -1,31 +1,41 @@
 const Pet = require('../models/pet.model');
 
-const create = (req, res) => {
+const create = async (req, res) => {
 	const { name, age, sex, owner } = req.body;
 
-	const newPet = new Pet({
-		name,
-		age,
-		sex,
-		owner,
-		created_at: Date.now(),
-		updated_at: Date.now(),
-		last_login: Date.now(),
-	});
+	try {
+		const hasPet = await Pet.findOne({ owner });
 
-	newPet.save((err, pet) => {
-		if (err) {
-			return res.status(500).json({
-				status: 500,
+		if (hasPet) {
+			return res.status(406).json({
+				status: 406,
 				error: `${err}`,
-				message: `Server Error`,
+				message: `Only one pet per person`,
 			});
 		}
 
-		res.status(200).json({
-			pet,
+		const newPet = new Pet({
+			name,
+			age,
+			sex,
+			owner,
+			created_at: Date.now(),
+			updated_at: Date.now(),
+			last_login: Date.now(),
 		});
-	});
+
+		const savedPet = await newPet.save();
+
+		res.status(201).json({
+			pet: savedPet,
+		});
+	} catch (error) {
+		return res.status(500).json({
+			status: 500,
+			error,
+			message: `Server Error`,
+		});
+	}
 };
 
 const get = async (req, res) => {
