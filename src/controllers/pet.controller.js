@@ -65,34 +65,33 @@ const get = async (req, res) => {
 	}
 };
 
-const getByID = (req, res) => {
-	const userID = req.params.userID;
+const getAll = async (_, res) => {
+	try {
+		const pets = await Pet.find({});
 
-	User.findById(userID, (err, user) => {
-		if (err)
-			return res.status(500).json({
-				status: 500,
-				error: `${err}`,
-				message: `Server Error`,
-			});
-
-		if (!user)
+		if (!pets) {
 			return res.status(404).json({
 				status: 404,
 				error: `${err}`,
 				message: `User not found`,
 			});
+		}
 
 		res.status(200).json({
 			status: 200,
-			profile: 'user-details',
-			user,
+			pets,
 		});
-	});
+	} catch (error) {
+		return res.status(500).json({
+			status: 500,
+			error,
+			message: `Server Error`,
+		});
+	}
 };
 
 module.exports = {
 	create,
 	get,
-	getByID,
+	getAll,
 };
