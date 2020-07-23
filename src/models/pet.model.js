@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const sexEnum = ['male', 'female'];
+const genderEnum = ['male', 'female'];
 
 const PetSchema = Schema(
 	{
 		name: { type: String, required: true },
 		age: { type: Number, required: true },
-		sex: { type: String, enum: sexEnum, required: true },
+		gender: { type: String, enum: genderEnum, required: true },
 		image: {
 			type: String,
-			default: 'https://i0.pngocean.com/files/15/838/326/dog-paw-logo-dog.jpg',
+			default: 'https://image.flaticon.com/icons/png/512/194/194279.png',
 		},
 		owner: { type: Schema.ObjectId, ref: 'User', required: true },
 		created_at: { type: Date },

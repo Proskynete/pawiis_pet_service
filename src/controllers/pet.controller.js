@@ -1,7 +1,7 @@
 const Pet = require('../models/pet.model');
 
 const create = async (req, res) => {
-	const { name, age, sex, owner } = req.body;
+	const { name, age, gender, owner } = req.body;
 
 	try {
 		const hasPet = await Pet.findOne({ owner });
@@ -17,7 +17,7 @@ const create = async (req, res) => {
 		const newPet = new Pet({
 			name,
 			age,
-			sex,
+			gender,
 			owner,
 			created_at: Date.now(),
 			updated_at: Date.now(),
