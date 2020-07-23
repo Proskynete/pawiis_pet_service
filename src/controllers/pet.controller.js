@@ -14,17 +14,45 @@ const create = (req, res) => {
 	});
 
 	newPet.save((err, pet) => {
-		if (err)
+		if (err) {
 			return res.status(500).json({
 				status: 500,
 				error: `${err}`,
 				message: `Server Error`,
 			});
+		}
 
 		res.status(200).json({
 			pet,
 		});
 	});
+};
+
+const get = async (req, res) => {
+	const { owner } = req.query;
+
+	try {
+		const pet = await Pet.findOne({ owner });
+
+		if (!pet) {
+			return res.status(404).json({
+				status: 404,
+				error: `${err}`,
+				message: `Pet not found`,
+			});
+		}
+
+		res.status(200).json({
+			status: 200,
+			pet,
+		});
+	} catch (error) {
+		return res.status(500).json({
+			status: 500,
+			error,
+			message: `Server Error`,
+		});
+	}
 };
 
 const getByID = (req, res) => {
@@ -55,5 +83,6 @@ const getByID = (req, res) => {
 
 module.exports = {
 	create,
+	get,
 	getByID,
 };
